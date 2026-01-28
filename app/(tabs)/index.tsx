@@ -72,15 +72,13 @@ export default function CreateExpense() {
     homeContainer: {
       flex: 1,
       justifyContent: "space-between",
-      paddingHorizontal: 20,
+      padding: 20,
       backgroundColor: "#eaeef3",
     },
     totalContainer: {
       padding: 16,
       backgroundColor: "#0272ca",
       borderRadius: 10,
-      marginTop: 10,
-      marginBottom: 16,
     },
     totalText: {
       fontSize: 18,
@@ -114,9 +112,7 @@ export default function CreateExpense() {
       fontWeight: "bold",
     },
     itemsHeader: {},
-    btnContainer: {
-      marginBottom: 10,
-    },
+    btnContainer: {},
   });
 
   return (
