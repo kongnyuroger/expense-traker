@@ -35,38 +35,70 @@ export default function CreateExpense() {
   };
 
   const styles = StyleSheet.create({
-    Container: {
+    container: {
       flex: 1,
       padding: 20,
-      justifyContent: "space-between",
+      backgroundColor: "#f9fafb",
     },
+
+    field: {
+      marginBottom: 16,
+    },
+
+    label: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: "#374151",
+      marginBottom: 6,
+    },
+
     input: {
-      fontSize: 18,
-      padding: 20,
-      borderRadius: 10,
-      backgroundColor: "white",
-      fontWeight: "bold",
+      height: 56,
+      paddingHorizontal: 16,
+      borderRadius: 12,
+      backgroundColor: "#fff",
+      borderWidth: 1,
+      borderColor: "#e5e7eb",
+      fontSize: 16,
+      color: "#111827",
     },
-    pickercontainer: {
-      padding: 16,
+
+    multiline: {
+      height: 120,
+      paddingTop: 10,
+      textAlignVertical: "top",
     },
-    picker: {
-      backgroundColor: "#f2f2f2",
+
+    pressable: {
+      height: 56,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: "#e5e7eb",
+      backgroundColor: "#fff",
+      paddingHorizontal: 16,
+      justifyContent: "center",
+    },
+
+    footer: {
+      marginTop: "auto",
     },
   });
 
   return (
-    <View style={styles.Container}>
-      <View>
-        <Text>Amount</Text>
+    <View style={styles.container}>
+      {/* Amount */}
+      <View style={styles.field}>
+        <Text style={styles.label}>Amount</Text>
         <TextInput
           keyboardType="numeric"
+          placeholder="Enter amount"
           style={styles.input}
-          placeholder="Enter Amount"
         />
       </View>
-      <View>
-        <Text>Category</Text>
+
+      {/* Category */}
+      <View style={styles.field}>
+        <Text style={styles.label}>Category</Text>
         <DropDownPicker
           open={open}
           value={value}
@@ -76,36 +108,30 @@ export default function CreateExpense() {
           setItems={setItems}
           placeholder="Select category"
           style={{
-            borderColor: "#ccc",
-            borderRadius: 10,
-            minHeight: 20,
-            height: 50,
-
-            backgroundColor: "white",
+            height: 56,
+            borderRadius: 12,
+            borderColor: "#e5e7eb",
+            backgroundColor: "#fff",
           }}
           dropDownContainerStyle={{
-            borderColor: "#ccc",
-            borderRadius: 10,
+            borderRadius: 12,
+            borderColor: "#e5e7eb",
           }}
           textStyle={{
-            fontSize: 15,
+            fontSize: 16,
+            color: "#111827",
           }}
           placeholderStyle={{
             color: "#9ca3af",
           }}
         />
       </View>
-      <View>
-        <Pressable
-          onPress={() => setShow(true)}
-          style={{
-            borderWidth: 1,
-            borderColor: "#e5e7eb",
-            borderRadius: 10,
-            padding: 14,
-          }}
-        >
-          <Text style={{ color: date ? "#111" : "#9ca3af" }}>
+
+      {/* Date */}
+      <View style={styles.field}>
+        <Text style={styles.label}>Date</Text>
+        <Pressable style={styles.pressable} onPress={() => setShow(true)}>
+          <Text style={{ color: date ? "#111827" : "#9ca3af", fontSize: 16 }}>
             {date ? date.toDateString() : "Select date"}
           </Text>
         </Pressable>
@@ -120,24 +146,20 @@ export default function CreateExpense() {
         )}
       </View>
 
-      <View>
-        <Text>Note</Text>
+      {/* Note */}
+      <View style={styles.field}>
+        <Text style={styles.label}>Note</Text>
         <TextInput
           value={text}
           onChangeText={setText}
-          placeholder="Write your message..."
+          placeholder="Write a note..."
           multiline
-          numberOfLines={4}
-          style={{
-            borderWidth: 1,
-            borderColor: "#e5e7eb",
-            borderRadius: 10,
-            padding: 14,
-            textAlignVertical: "top", // important for Android
-          }}
+          style={[styles.input, styles.multiline]}
         />
       </View>
-      <View>
+
+      {/* Button */}
+      <View style={styles.footer}>
         <Button placeHolder="Save Expense" onPress={onPress} />
       </View>
     </View>
