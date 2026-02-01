@@ -1,6 +1,7 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import {
+  Alert,
   Platform,
   Pressable,
   StyleSheet,
@@ -10,6 +11,7 @@ import {
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import Button from "../../components/Button";
+import { saveExpense } from "../../storage/expenseStorage";
 
 export default function CreateExpense() {
   const [open, setOpen] = useState(false);
@@ -34,6 +36,35 @@ export default function CreateExpense() {
 
   const onPress = () => {
     console.log("presable");
+  };
+
+  const handleSaveExpense = async () => {
+    if (!date || !amount || !category) {
+      Alert.alert("Missing fields", "Please fill all required fields.");
+      return;
+    }
+    const expense = {
+      id: Date.now().toString(),
+      amount: Number(amount),
+      category,
+      date: date.toISOString(),
+      note: text,
+    };
+
+    await saveExpense(expense);
+
+    try {
+      await saveExpense(expense);
+      Alert.alert("Success", "Expense saved successfully!");
+
+      // Reset form
+      setAmount("");
+      setCategory(null);
+      setDate(null);
+      setText("");
+    } catch (error) {
+      Alert.alert("Error", "Failed to save expense");
+    }
   };
 
   const styles = StyleSheet.create({
