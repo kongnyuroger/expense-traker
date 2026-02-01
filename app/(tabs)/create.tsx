@@ -22,6 +22,8 @@ export default function CreateExpense() {
   const [text, setText] = useState("");
   const [date, setDate] = useState<Date | null>(null);
   const [show, setShow] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState<string | null>(null);
 
   const onChange = (event: any, selectedDate?: Date) => {
     setShow(false);
@@ -93,6 +95,8 @@ export default function CreateExpense() {
           keyboardType="numeric"
           placeholder="Enter amount"
           style={styles.input}
+          value={amount}
+          onChangeText={setAmount}
         />
       </View>
 
@@ -101,10 +105,10 @@ export default function CreateExpense() {
         <Text style={styles.label}>Category</Text>
         <DropDownPicker
           open={open}
-          value={value}
+          value={category}
           items={items}
           setOpen={setOpen}
-          setValue={setValue}
+          setValue={setCategory}
           setItems={setItems}
           placeholder="Select category"
           style={{
