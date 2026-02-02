@@ -1,71 +1,28 @@
+import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import Button from "../../components/Button";
-export default function CreateExpense() {
-  const expenses = [
-    {
-      price: 20,
-      category: "grocery",
-      date: "23/1/2026",
-    },
-    {
-      price: 50,
-      category: "transport",
-      date: "24/1/2026",
-    },
-    {
-      price: 120,
-      category: "utilities",
-      date: "24/1/2026",
-    },
-    {
-      price: 35,
-      category: "food",
-      date: "25/1/2026",
-    },
-    {
-      price: 200,
-      category: "rent",
-      date: "26/1/2026",
-    },
-    {
-      price: 15,
-      category: "entertainment",
-      date: "26/1/2026",
-    },
-    {
-      price: 20,
-      category: "grocery",
-      date: "23/1/2026",
-    },
-    {
-      price: 50,
-      category: "transport",
-      date: "24/1/2026",
-    },
-    {
-      price: 120,
-      category: "utilities",
-      date: "24/1/2026",
-    },
-    {
-      price: 20,
-      category: "grocery",
-      date: "23/1/2026",
-    },
-    {
-      price: 50,
-      category: "transport",
-      date: "24/1/2026",
-    },
-    {
-      price: 120,
-      category: "utilities",
-      date: "24/1/2026",
-    },
-  ];
+import { getExpenses } from "../../storage/expenseStorage";
 
-  const hello = () => {
-    console.log("hello");
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+
+export default function CreateExpense() {
+  const [expenses, setExpenses] = useState<any[]>([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadExpenses();
+    }, []),
+  );
+
+  const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+  useEffect(() => {
+    console.log("Updated expenses:", expenses);
+  }, [expenses]);
+
+  const loadExpenses = async () => {
+    const storedExpenses = await getExpenses();
+    setExpenses(storedExpenses);
   };
 
   const styles = StyleSheet.create({
@@ -119,25 +76,34 @@ export default function CreateExpense() {
     <View style={styles.homeContainer}>
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>Total this month:</Text>
-        <Text style={styles.amountText}>$478.33</Text>
+        <Text style={styles.amountText}>${total.toFixed(2)}</Text>
       </View>
       <View style={styles.expenseItem}>
         <Text style={styles.itemText}>Recent expenses</Text>
         <FlatList
           data={expenses}
-          renderItem={({ item, index }) => (
-            <View style={styles.item} key={index}>
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
               <Text style={[styles.itemText, styles.priceText]}>
-                {"$" + item.price + "."}
+                ${item.amount}
               </Text>
-              <Text style={styles.itemText}>{item.category + "."}</Text>
-              <Text style={styles.itemText}>{item.date + "."}</Text>
+
+              <Text style={styles.itemText}>{item.category}</Text>
+
+              <Text style={styles.itemText}>
+                {new Date(item.date).toDateString()}
+              </Text>
             </View>
           )}
         />
       </View>
       <View style={styles.btnContainer}>
-        <Button placeHolder="+ Add Expense" onPress={hello} />
+        <Button
+          placeHolder="+ Add Expense"
+          onPress={() => console.log("hello")}
+        />
       </View>
     </View>
   );

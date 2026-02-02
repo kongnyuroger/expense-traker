@@ -195,7 +195,7 @@ export default function CreateExpense() {
 
       {/* Button */}
       <View style={styles.footer}>
-        <Button placeHolder="Save Expense" onPress={onPress} />
+        <Button placeHolder="Save Expense" onPress={handleSaveExpense} />
       </View>
     </View>
   );
