@@ -1,13 +1,13 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import {
-  Alert,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
+    Alert,
+    Platform,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import Button from "../../components/Button";
@@ -172,12 +172,25 @@ export default function CreateExpense() {
         </Pressable>
 
         {show && (
-          <DateTimePicker
-            value={date || new Date()}
-            mode="date"
-            display={Platform.OS === "ios" ? "spinner" : "default"}
-            onChange={onChange}
-          />
+          <View
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: 12,
+              padding: 12,
+              marginTop: 8,
+              borderWidth: 1,
+              borderColor: "#e5e7eb",
+            }}
+          >
+            <DateTimePicker
+              value={date || new Date()}
+              mode="date"
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+              onChange={onChange}
+              themeVariant="light"
+              textColor="#111827"
+            />
+          </View>
         )}
       </View>
 
