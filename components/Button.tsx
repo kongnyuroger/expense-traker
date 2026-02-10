@@ -1,28 +1,20 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 
 type Props = {
   placeHolder: string;
   onPress: () => void;
 };
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: "#0272ca",
-    padding: 15,
-    borderRadius: 10,
-    textAlign: "center",
-  },
-  text: {
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "white",
-  },
-});
 export default function Button({ placeHolder, onPress }: Props) {
   return (
-    <Pressable style={styles.button} onPress={onPress}>
-      <Text style={styles.text}>{placeHolder}</Text>
+    <Pressable
+      className="bg-indigo-600 p-4 rounded-xl active:bg-indigo-700 active:opacity-90 shadow-sm"
+      onPress={onPress}
+    >
+      <Text className="text-white text-lg font-bold text-center">
+        {placeHolder}
+      </Text>
     </Pressable>
   );
 }
+

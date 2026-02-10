@@ -1,10 +1,12 @@
+import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import {
     Alert,
     Platform,
     Pressable,
-    StyleSheet,
+    SafeAreaView,
+    ScrollView,
     Text,
     TextInput,
     View,
@@ -17,12 +19,13 @@ export default function CreateExpense() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: "Grocery", value: "grocery" },
-    { label: "Transport", value: "transport" },
-    { label: "Bills", value: "bills" },
+    { label: "Grocery", value: "grocery", icon: () => <Ionicons name="cart-outline" size={18} color="#64748b" /> },
+    { label: "Transport", value: "transport", icon: () => <Ionicons name="car-outline" size={18} color="#64748b" /> },
+    { label: "Bills", value: "bills", icon: () => <Ionicons name="receipt-outline" size={18} color="#64748b" /> },
+    { label: "Other", value: "other", icon: () => <Ionicons name="cash-outline" size={18} color="#64748b" /> },
   ]);
   const [text, setText] = useState("");
-  const [date, setDate] = useState<Date | null>(null);
+  const [date, setDate] = useState<Date | null>(new Date());
   const [show, setShow] = useState(false);
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<string | null>(null);
@@ -32,10 +35,6 @@ export default function CreateExpense() {
     if (selectedDate) {
       setDate(selectedDate);
     }
-  };
-
-  const onPress = () => {
-    console.log("presable");
   };
 
   const handleSaveExpense = async () => {
@@ -51,8 +50,6 @@ export default function CreateExpense() {
       note: text,
     };
 
-    await saveExpense(expense);
-
     try {
       await saveExpense(expense);
       Alert.alert("Success", "Expense saved successfully!");
@@ -60,156 +57,127 @@ export default function CreateExpense() {
       // Reset form
       setAmount("");
       setCategory(null);
-      setDate(null);
+      setValue(null);
+      setDate(new Date());
       setText("");
     } catch (error) {
       Alert.alert("Error", "Failed to save expense");
     }
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 20,
-      backgroundColor: "#f9fafb",
-    },
-
-    field: {
-      marginBottom: 16,
-    },
-
-    label: {
-      fontSize: 14,
-      fontWeight: "600",
-      color: "#374151",
-      marginBottom: 6,
-    },
-
-    input: {
-      height: 56,
-      paddingHorizontal: 16,
-      borderRadius: 12,
-      backgroundColor: "#fff",
-      borderWidth: 1,
-      borderColor: "#e5e7eb",
-      fontSize: 16,
-      color: "#111827",
-    },
-
-    multiline: {
-      height: 120,
-      paddingTop: 10,
-      textAlignVertical: "top",
-    },
-
-    pressable: {
-      height: 56,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: "#e5e7eb",
-      backgroundColor: "#fff",
-      paddingHorizontal: 16,
-      justifyContent: "center",
-    },
-
-    footer: {
-      marginTop: "auto",
-    },
-  });
-
   return (
-    <View style={styles.container}>
-      {/* Amount */}
-      <View style={styles.field}>
-        <Text style={styles.label}>Amount</Text>
-        <TextInput
-          keyboardType="numeric"
-          placeholder="Enter amount"
-          style={styles.input}
-          value={amount}
-          onChangeText={setAmount}
-        />
-      </View>
+    <SafeAreaView className="flex-1 bg-slate-50">
+      <ScrollView contentContainerStyle={{ padding: 24 }}>
+        <Text className="text-2xl font-bold text-slate-900 mb-6">
+          Add New Expense
+        </Text>
 
-      {/* Category */}
-      <View style={styles.field}>
-        <Text style={styles.label}>Category</Text>
-        <DropDownPicker
-          open={open}
-          value={category}
-          items={items}
-          setOpen={setOpen}
-          setValue={setCategory}
-          setItems={setItems}
-          placeholder="Select category"
-          style={{
-            height: 56,
-            borderRadius: 12,
-            borderColor: "#e5e7eb",
-            backgroundColor: "#fff",
-          }}
-          dropDownContainerStyle={{
-            borderRadius: 12,
-            borderColor: "#e5e7eb",
-          }}
-          textStyle={{
-            fontSize: 16,
-            color: "#111827",
-          }}
-          placeholderStyle={{
-            color: "#9ca3af",
-          }}
-        />
-      </View>
-
-      {/* Date */}
-      <View style={styles.field}>
-        <Text style={styles.label}>Date</Text>
-        <Pressable style={styles.pressable} onPress={() => setShow(true)}>
-          <Text style={{ color: date ? "#111827" : "#9ca3af", fontSize: 16 }}>
-            {date ? date.toDateString() : "Select date"}
+        {/* Amount */}
+        <View className="mb-6">
+          <Text className="text-sm font-semibold text-slate-700 mb-2">
+            Amount
           </Text>
-        </Pressable>
-
-        {show && (
-          <View
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: 12,
-              padding: 12,
-              marginTop: 8,
-              borderWidth: 1,
-              borderColor: "#e5e7eb",
-            }}
-          >
-            <DateTimePicker
-              value={date || new Date()}
-              mode="date"
-              display={Platform.OS === "ios" ? "spinner" : "default"}
-              onChange={onChange}
-              themeVariant="light"
-              textColor="#111827"
+          <View className="bg-white rounded-xl border border-slate-200 shadow-sm flex-row items-center px-4">
+             <Text className="text-slate-400 text-lg font-bold mr-2">$</Text>
+             <TextInput
+              keyboardType="numeric"
+              placeholder="0.00"
+              className="flex-1 h-14 text-lg font-semibold text-slate-900"
+              placeholderTextColor="#cbd5e1"
+              value={amount}
+              onChangeText={setAmount}
             />
           </View>
-        )}
-      </View>
+        </View>
 
-      {/* Note */}
-      <View style={styles.field}>
-        <Text style={styles.label}>Note</Text>
-        <TextInput
-          value={text}
-          onChangeText={setText}
-          placeholder="Write a note..."
-          multiline
-          style={[styles.input, styles.multiline]}
-        />
-      </View>
+        {/* Category */}
+        <View className="mb-6 z-50">
+          <Text className="text-sm font-semibold text-slate-700 mb-2">
+            Category
+          </Text>
+          <DropDownPicker
+            open={open}
+            value={category}
+            items={items}
+            setOpen={setOpen}
+            setValue={setCategory}
+            setItems={setItems}
+            placeholder="Select category"
+            style={{
+              backgroundColor: "#ffffff",
+              borderColor: "#e2e8f0",
+              borderRadius: 12,
+              height: 56,
+            }}
+            textStyle={{
+              fontSize: 16,
+              color: "#0f172a",
+            }}
+            dropDownContainerStyle={{
+              borderColor: "#e2e8f0",
+              marginTop: 4,
+              borderRadius: 12,
+              backgroundColor: "#ffffff",
+            }}
+            placeholderStyle={{
+              color: "#cbd5e1",
+            }}
+            zIndex={3000}
+            zIndexInverse={1000}
+          />
+        </View>
 
-      {/* Button */}
-      <View style={styles.footer}>
+        {/* Date */}
+        <View className="mb-6">
+          <Text className="text-sm font-semibold text-slate-700 mb-2">
+            Date
+          </Text>
+          <Pressable
+            onPress={() => setShow(true)}
+            className="bg-white rounded-xl border border-slate-200 h-14 justify-center px-4 shadow-sm"
+          >
+            <View className="flex-row items-center">
+               <Ionicons name="calendar-outline" size={20} color="#64748b" style={{ marginRight: 10 }} />
+               <Text className={date ? "text-slate-900 text-base" : "text-slate-400 text-base"}>
+                {date ? date.toDateString() : "Select date"}
+              </Text>
+            </View>
+          </Pressable>
+
+          {show && (
+            <View className="bg-white p-4 rounded-xl mt-2 border border-slate-200 shadow-sm">
+              <DateTimePicker
+                value={date || new Date()}
+                mode="date"
+                display={Platform.OS === "ios" ? "inline" : "default"}
+                onChange={onChange}
+                textColor="#0f172a"
+                accentColor="#4f46e5"
+              />
+            </View>
+          )}
+        </View>
+
+        {/* Note */}
+        <View className="mb-8">
+          <Text className="text-sm font-semibold text-slate-700 mb-2">
+            Note (Optional)
+          </Text>
+          <TextInput
+            value={text}
+            onChangeText={setText}
+            placeholder="What was this for?"
+            multiline
+            className="bg-white rounded-xl border border-slate-200 p-4 text-base text-slate-900 h-32 shadow-sm"
+            placeholderTextColor="#cbd5e1"
+            textAlignVertical="top"
+          />
+        </View>
+
+        {/* Button */}
         <Button placeHolder="Save Expense" onPress={handleSaveExpense} />
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
